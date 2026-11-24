@@ -1,0 +1,32 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Environment preparation..."
+  pre_build:
+    commands:
+      - echo "Validating files and repository structure..."
+      - ls -la
+  build:
+    commands:
+      - echo "Build started on `date`"
+      - echo "Validating HTML files..."
+      - test -f index.html && echo "index.html verified successfully"
+  post_build:
+    commands:
+      - echo "Build completed on `date`"
+      # If S3_BUCKET environment variable is configured in AWS CodeBuild:
+      - |
+        if [ -n "$S3_BUCKET" ]; then
+          echo "Deploying to S3 bucket: $S3_BUCKET"
+          aws s3 sync . "s3://$S3_BUCKET" --delete --exclude ".git/*" --exclude "buildspec.yaml"
+        else
+          echo "S3_BUCKET variable not set. Artifacts will be passed to CodePipeline / artifacts store."
+        fi
+
+artifacts:
+  files:
+    - '**/*'
+  exclude-paths:
+    - '.git/**/*'

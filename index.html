@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A simple, fast, and responsive static website built with modern HTML5 and CSS.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>">
   <title>My Simple Static Website</title>
   <style>
     /* Reset & Base Styles */
@@ -10,6 +12,11 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px; /* Fix sticky header overlap when scrolling to anchor targets */
     }
 
     body {
@@ -62,8 +69,10 @@
       transition: color 0.2s ease;
     }
 
-    nav a:hover {
+    nav a:hover,
+    nav a:focus {
       color: #2563eb;
+      outline: none;
     }
 
     /* Hero Section */
@@ -142,6 +151,7 @@
     .card-icon {
       font-size: 2rem;
       margin-bottom: 14px;
+      display: inline-block;
     }
 
     .card h3 {
@@ -179,15 +189,34 @@
       color: #94a3b8;
       font-size: 0.9rem;
     }
+
+    /* Responsive Adjustments */
+    @media (max-width: 640px) {
+      .hero {
+        padding: 50px 0;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      nav ul {
+        gap: 16px;
+      }
+    }
   </style>
 </head>
 <body>
 
   <!-- Navigation -->
-  <header>
+  <header role="banner">
     <div class="container nav-wrapper">
-      <a href="#" class="logo">MyBrand</a>
-      <nav>
+      <a href="#home" class="logo">MyBrand</a>
+      <nav aria-label="Main Navigation">
         <ul>
           <li><a href="#home">Home</a></li>
           <li><a href="#features">Features</a></li>
@@ -198,51 +227,53 @@
   </header>
 
   <!-- Hero Section -->
-  <section class="hero" id="home">
-    <div class="container">
-      <h1>Welcome to My Website</h1>
-      <p>A simple, clean, and responsive static website built with pure HTML and CSS.</p>
-      <a href="#features" class="cta-btn">Explore Features</a>
-    </div>
-  </section>
+  <main>
+    <section class="hero" id="home">
+      <div class="container">
+        <h1>Welcome to My Website</h1>
+        <p>A simple, clean, and responsive static website built with pure HTML and CSS.</p>
+        <a href="#features" class="cta-btn">Explore Features</a>
+      </div>
+    </section>
 
-  <!-- Features Section -->
-  <section class="features" id="features">
-    <div class="container">
-      <h2 class="section-title">What We Offer</h2>
-      <div class="feature-grid">
-        <div class="card">
-          <div class="card-icon">⚡</div>
-          <h3>Fast Loading</h3>
-          <p>Lightweight markup and clean styling ensure ultra-fast load times on all devices.</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">📱</div>
-          <h3>Fully Responsive</h3>
-          <p>Adapts smoothly to mobile phones, tablets, laptops, and desktop screens.</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">🎨</div>
-          <h3>Easy to Customize</h3>
-          <p>Clean and readable code that you can easily modify to fit your specific needs.</p>
+    <!-- Features Section -->
+    <section class="features" id="features">
+      <div class="container">
+        <h2 class="section-title">What We Offer</h2>
+        <div class="feature-grid">
+          <div class="card">
+            <div class="card-icon" role="img" aria-label="Lightning Bolt">⚡</div>
+            <h3>Fast Loading</h3>
+            <p>Lightweight markup and clean styling ensure ultra-fast load times on all devices.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon" role="img" aria-label="Mobile Phone">📱</div>
+            <h3>Fully Responsive</h3>
+            <p>Adapts smoothly to mobile phones, tablets, laptops, and desktop screens.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon" role="img" aria-label="Artist Palette">🎨</div>
+            <h3>Easy to Customize</h3>
+            <p>Clean and readable code that you can easily modify to fit your specific needs.</p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- About Section -->
-  <section class="about" id="about">
-    <div class="container">
-      <h2 class="section-title">About Us</h2>
-      <p>
-        This website is built with clean, semantic HTML5 and modern CSS styling. 
-        It does not require any build tools, external libraries, or complex setups—just open it in any web browser!
-      </p>
-    </div>
-  </section>
+    <!-- About Section -->
+    <section class="about" id="about">
+      <div class="container">
+        <h2 class="section-title">About Us</h2>
+        <p>
+          This website is built with clean, semantic HTML5 and modern CSS styling. 
+          It does not require any build tools, external libraries, or complex setups—just open it in any web browser!
+        </p>
+      </div>
+    </section>
+  </main>
 
   <!-- Footer -->
-  <footer>
+  <footer role="contentinfo">
     <div class="container">
       <p>&copy; 2026 MyBrand. All rights reserved.</p>
     </div>
