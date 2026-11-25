@@ -10,17 +10,18 @@ phases:
       - ls -la
   build:
     commands:
-      - echo "Build started on `date`"
+      - echo "Build started on $(date)"
       - echo "Validating HTML files..."
       - test -f index.html && echo "index.html verified successfully"
   post_build:
     commands:
-      - echo "Build completed on `date`"
-      # If S3_BUCKET environment variable is configured in AWS CodeBuild:
+      - echo "Build completed on $(date)"
       - |
-        if [ -n "$S3_BUCKET" ]; then
+        if [ "$CODEBUILD_BUILD_SUCCEEDING" = "1" ] && [ -n "$S3_BUCKET" ]; then
           echo "Deploying to S3 bucket: $S3_BUCKET"
-          aws s3 sync . "s3://$S3_BUCKET" --delete --exclude ".git/*" --exclude "buildspec.yaml"
+          aws s3 sync . "s3://$S3_BUCKET" --delete --exclude ".git/*" --exclude "buildspec.yaml" --exclude "buildspec.yml"
+        elif [ "$CODEBUILD_BUILD_SUCCEEDING" != "1" ]; then
+          echo "Build failed. Skipping S3 deployment."
         else
           echo "S3_BUCKET variable not set. Artifacts will be passed to CodePipeline / artifacts store."
         fi
@@ -30,3 +31,5 @@ artifacts:
     - '**/*'
   exclude-paths:
     - '.git/**/*'
+    - 'buildspec.yaml'
+    - 'buildspec.yml'
