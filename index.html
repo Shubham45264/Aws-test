@@ -4,19 +4,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta name="description" content="A simple, fast, and responsive static website built with modern HTML5 and CSS.">
-
+  <meta name="description" content="MyBrand — A fast, accessible, and modern static website crafted with clean HTML5, CSS3, and vanilla JavaScript.">
   <meta name="theme-color" content="#ffffff">
-
-  <title>My Simple Static Website</title>
-
-  <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>">
+  <title>MyBrand — Modern Static Website</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>">
 
   <style>
-    /* Reset */
-    * {
+    /* Design Tokens */
+    :root {
+      --bg: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-muted: #f1f5f9;
+      --bg-header: rgba(255, 255, 255, 0.85);
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-soft: rgba(37, 99, 235, 0.1);
+      --border: #e2e8f0;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+      --shadow-accent: 0 8px 20px -4px rgba(37, 99, 235, 0.35);
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --success: #059669;
+      --success-bg: #ecfdf5;
+      --error: #dc2626;
+      --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b1120;
+      --bg-surface: #111827;
+      --bg-muted: #1e293b;
+      --bg-header: rgba(11, 17, 32, 0.85);
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #60a5fa;
+      --accent-soft: rgba(59, 130, 246, 0.15);
+      --border: #1e293b;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 12px 28px -5px rgba(0, 0, 0, 0.45);
+      --shadow-accent: 0 8px 20px -4px rgba(59, 130, 246, 0.4);
+      --success: #34d399;
+      --success-bg: rgba(16, 185, 129, 0.12);
+      --error: #f87171;
+    }
+
+    /* Reset & Base */
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -24,15 +65,16 @@
 
     html {
       scroll-behavior: smooth;
-      scroll-padding-top: 85px;
+      scroll-padding-top: 84px;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       line-height: 1.6;
-      color: #333;
-      background-color: #f8fafc;
+      color: var(--text-primary);
+      background-color: var(--bg);
+      transition: background-color var(--transition), color var(--transition);
+      -webkit-font-smoothing: antialiased;
     }
 
     a {
@@ -40,26 +82,34 @@
     }
 
     a:focus-visible,
-    button:focus-visible {
-      outline: 3px solid #93c5fd;
-      outline-offset: 4px;
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
     }
 
-    /* Container */
     .container {
       width: 100%;
-      max-width: 1000px;
+      max-width: 1080px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 24px;
     }
 
     /* Header */
     header {
-      background-color: #fff;
-      border-bottom: 1px solid #e2e8f0;
+      background-color: var(--bg-header);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
       z-index: 100;
+      transition: box-shadow var(--transition), background-color var(--transition), border-color var(--transition);
+    }
+
+    header.scrolled {
+      box-shadow: var(--shadow-sm);
     }
 
     .nav-wrapper {
@@ -71,11 +121,21 @@
     }
 
     .logo {
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: #2563eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--accent);
       text-decoration: none;
       white-space: nowrap;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
     }
 
     nav ul {
@@ -87,152 +147,579 @@
 
     nav a {
       text-decoration: none;
-      color: #4b5563;
+      color: var(--text-secondary);
       font-weight: 500;
-      transition: color 0.2s ease;
+      font-size: 0.95rem;
+      position: relative;
+      padding: 4px 0;
+      transition: color var(--transition);
     }
 
-    nav a:hover {
-      color: #2563eb;
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      border-radius: 2px;
+      transition: width var(--transition);
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--accent);
+    }
+
+    nav a:hover::after,
+    nav a.active::after {
+      width: 100%;
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background-color: var(--bg-surface);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: border-color var(--transition), color var(--transition), transform var(--transition);
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: rotate(12deg);
+    }
+
+    .theme-toggle svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .icon-sun {
+      display: none;
+    }
+
+    [data-theme="dark"] .icon-sun {
+      display: block;
+    }
+
+    [data-theme="dark"] .icon-moon {
+      display: none;
     }
 
     /* Hero */
     .hero {
-      padding: 80px 0;
+      position: relative;
+      overflow: hidden;
+      padding: 96px 0 84px;
       text-align: center;
-      background: linear-gradient(180deg,
-          #eff6ff 0%,
-          #f8fafc 100%);
+      background:
+        radial-gradient(circle at 50% 0%, var(--accent-soft) 0%, transparent 65%),
+        var(--bg);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      margin-bottom: 22px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      background-color: var(--accent-soft);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      border-radius: 999px;
     }
 
     .hero h1 {
-      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-size: clamp(2.2rem, 5vw, 3.25rem);
       font-weight: 800;
-      color: #1e293b;
-      margin-bottom: 16px;
-      line-height: 1.2;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      margin-bottom: 18px;
+      line-height: 1.15;
+    }
+
+    .hero-highlight {
+      color: var(--accent);
     }
 
     .hero p {
-      font-size: 1.15rem;
-      color: #64748b;
-      max-width: 600px;
-      margin: 0 auto 30px;
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      color: var(--text-secondary);
+      max-width: 620px;
+      margin: 0 auto 34px;
     }
 
-    /* Button */
-    .cta-btn {
-      display: inline-block;
-      padding: 12px 28px;
-      font-size: 1rem;
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 26px;
+      font-size: 0.98rem;
       font-weight: 600;
-      color: #fff;
-      background-color: #2563eb;
-      border-radius: 6px;
+      border-radius: 8px;
       text-decoration: none;
-      box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
-      transition: background-color 0.2s ease,
-        transform 0.2s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background-color var(--transition), transform var(--transition), box-shadow var(--transition), border-color var(--transition), color var(--transition);
     }
 
-    .cta-btn:hover {
-      background-color: #1d4ed8;
+    .btn-primary {
+      color: #ffffff;
+      background-color: var(--accent);
+      box-shadow: var(--shadow-accent);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
       transform: translateY(-2px);
     }
 
-    /* Features */
-    .features {
-      padding: 60px 0 80px;
+    .btn-secondary {
+      color: var(--text-primary);
+      background-color: var(--bg-surface);
+      border-color: var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* Metrics Strip */
+    .metrics {
+      padding: 28px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background-color: var(--bg-surface);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+
+    .metric-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Section Shared */
+    .section {
+      padding: 80px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 48px;
+    }
+
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 8px;
     }
 
     .section-title {
-      text-align: center;
-      font-size: 1.85rem;
-      color: #1e293b;
-      margin-bottom: 40px;
+      font-size: clamp(1.65rem, 3vw, 2.1rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 12px;
     }
 
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    /* Features */
     .feature-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit,
-          minmax(min(100%, 280px), 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
       gap: 24px;
     }
 
     .card {
-      background-color: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 28px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      transition: transform 0.2s ease,
-        box-shadow 0.2s ease;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
     }
 
     .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(37, 99, 235, 0.35);
     }
 
     .card-icon {
-      font-size: 2rem;
-      margin-bottom: 14px;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background-color: var(--accent-soft);
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    .card-icon svg {
+      width: 24px;
+      height: 24px;
     }
 
     .card h3 {
-      font-size: 1.25rem;
-      color: #1e293b;
-      margin-bottom: 8px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 10px;
     }
 
     .card p {
-      color: #64748b;
+      color: var(--text-secondary);
       font-size: 0.95rem;
     }
 
     /* About */
     .about {
-      background-color: #fff;
-      border-top: 1px solid #e2e8f0;
-      padding: 60px 0;
-      text-align: center;
+      background-color: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
 
-    .about p {
-      max-width: 700px;
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .about-content h2 {
+      font-size: clamp(1.65rem, 3vw, 2.05rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .about-content p {
+      color: var(--text-secondary);
+      font-size: 1.02rem;
+      margin-bottom: 24px;
+    }
+
+    .checklist {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 0.96rem;
+    }
+
+    .check-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background-color: var(--accent-soft);
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .check-badge svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .about-panel {
+      background-color: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--border);
+    }
+
+    .dot-red {
+      background-color: #ef4444;
+    }
+
+    .dot-amber {
+      background-color: #f59e0b;
+    }
+
+    .dot-green {
+      background-color: #10b981;
+    }
+
+    .spec-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .spec-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.92rem;
+    }
+
+    .spec-name {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .spec-value {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Contact */
+    .contact-card {
+      max-width: 640px;
       margin: 0 auto;
-      color: #4b5563;
-      font-size: 1.05rem;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 0.96rem;
+      color: var(--text-primary);
+      background-color: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .form-group textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .form-status {
+      font-size: 0.92rem;
+      font-weight: 500;
+      padding: 12px 14px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .form-status.success {
+      display: block;
+      color: var(--success);
+      background-color: var(--success-bg);
+    }
+
+    .form-status.error {
+      display: block;
+      color: var(--error);
+      background-color: rgba(220, 38, 38, 0.1);
     }
 
     /* Footer */
     footer {
-      border-top: 1px solid #e2e8f0;
-      background-color: #f1f5f9;
-      padding: 24px 0;
-      text-align: center;
-      color: #64748b;
+      border-top: 1px solid var(--border);
+      background-color: var(--bg-muted);
+      padding: 32px 0;
+      color: var(--text-muted);
       font-size: 0.9rem;
     }
 
+    .footer-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    /* Back to Top */
+    .back-to-top {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-md);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: opacity var(--transition), transform var(--transition), visibility var(--transition), color var(--transition), border-color var(--transition);
+      z-index: 90;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .back-to-top svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Scroll Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     /* Responsive */
+    @media (max-width: 768px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+
     @media (max-width: 640px) {
       .container {
         padding: 0 16px;
       }
 
       .nav-wrapper {
-        min-height: 65px;
+        min-height: 64px;
         flex-wrap: wrap;
         justify-content: center;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        gap: 8px;
+        padding: 10px 0;
+        gap: 10px;
+      }
+
+      .nav-actions {
+        gap: 14px;
       }
 
       nav ul {
-        gap: 18px;
+        gap: 16px;
       }
 
       nav a {
@@ -240,35 +727,37 @@
       }
 
       .hero {
-        padding: 50px 0;
+        padding: 64px 0 56px;
       }
 
-      .hero p {
-        font-size: 1rem;
+      .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
       }
 
-      .features {
-        padding: 45px 0 60px;
+      .section {
+        padding: 56px 0;
       }
 
-      .section-title {
-        font-size: 1.6rem;
-        margin-bottom: 28px;
-      }
-
-      .card {
+      .contact-card {
         padding: 24px;
       }
 
-      .about {
-        padding: 45px 0;
+      .footer-wrapper {
+        flex-direction: column;
+        text-align: center;
       }
     }
 
-    /* Reduced motion accessibility */
+    /* Reduced Motion */
     @media (prefers-reduced-motion: reduce) {
       html {
         scroll-behavior: auto;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
       }
 
       *,
@@ -284,20 +773,38 @@
 
 <body>
 
-  <!-- Navigation -->
-  <header>
+  <!-- Header -->
+  <header id="site-header">
     <div class="container nav-wrapper">
-
       <a href="#home" class="logo">MyBrand</a>
 
-      <nav aria-label="Main Navigation">
-        <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#features">Features</a></li>
-          <li><a href="#about">About</a></li>
-        </ul>
-      </nav>
+      <div class="nav-actions">
+        <nav aria-label="Main Navigation">
+          <ul>
+            <li><a href="#home" class="nav-link active">Home</a></li>
+            <li><a href="#features" class="nav-link">Features</a></li>
+            <li><a href="#about" class="nav-link">About</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+          </ul>
+        </nav>
 
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -307,73 +814,186 @@
     <!-- Hero Section -->
     <section class="hero" id="home">
       <div class="container">
-
-        <h1>Welcome to My Website</h1>
-
+        <span class="hero-badge">Fast &bull; Clean &bull; Zero Dependencies</span>
+        <h1>Build &amp; Ship <span class="hero-highlight">Modern Static</span> Websites</h1>
         <p>
-          A simple, clean, and responsive static website
-          built with pure HTML and CSS.
+          A lightweight, responsive, and accessible single-file website engineered with semantic HTML5,
+          adaptive theming, and smooth micro-interactions.
         </p>
+        <div class="hero-actions">
+          <a href="#features" class="btn btn-primary">Explore Features</a>
+          <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+        </div>
+      </div>
+    </section>
 
-        <a href="#features" class="cta-btn">
-          Explore Features
-        </a>
-
+    <!-- Metrics Strip -->
+    <section class="metrics" aria-label="Key Highlights">
+      <div class="container metrics-grid">
+        <div>
+          <div class="metric-value">100%</div>
+          <div class="metric-label">Pure Static HTML &amp; CSS</div>
+        </div>
+        <div>
+          <div class="metric-value">0</div>
+          <div class="metric-label">External Dependencies</div>
+        </div>
+        <div>
+          <div class="metric-value">&lt; 1s</div>
+          <div class="metric-label">Instant Load Time</div>
+        </div>
       </div>
     </section>
 
     <!-- Features Section -->
-    <section class="features" id="features">
+    <section class="section" id="features">
       <div class="container">
-
-        <h2 class="section-title">What We Offer</h2>
+        <div class="section-header reveal">
+          <span class="section-eyebrow">Capabilities</span>
+          <h2 class="section-title">Everything You Need</h2>
+          <p class="section-subtitle">
+            Designed with attention to performance, visual polish, and effortless customization.
+          </p>
+        </div>
 
         <div class="feature-grid">
-
-          <article class="card">
-            <div class="card-icon" aria-hidden="true">⚡</div>
-            <h3>Fast Loading</h3>
+          <article class="card reveal">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </div>
+            <h3>Blazingly Fast</h3>
             <p>
-              Lightweight markup and clean styling ensure
-              ultra-fast load times on all devices.
+              Zero network overhead and minimal markup ensure near-instant rendering on any connection.
             </p>
           </article>
 
-          <article class="card">
-            <div class="card-icon" aria-hidden="true">📱</div>
-            <h3>Fully Responsive</h3>
+          <article class="card reveal">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+              </svg>
+            </div>
+            <h3>Responsive Layout</h3>
             <p>
-              Adapts smoothly to mobile phones, tablets,
-              laptops, and desktop screens.
+              Fluid typography and adaptive CSS Grid layouts scale cleanly from phones to ultrawide monitors.
             </p>
           </article>
 
-          <article class="card">
-            <div class="card-icon" aria-hidden="true">🎨</div>
-            <h3>Easy to Customize</h3>
+          <article class="card reveal">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 16v-4"></path>
+                <path d="M12 8h.01"></path>
+              </svg>
+            </div>
+            <h3>Accessible First</h3>
             <p>
-              Clean and readable code that you can easily
-              modify to fit your specific needs.
+              Built with semantic landmarks, keyboard focus indicators, dark mode, and reduced-motion support.
             </p>
           </article>
-
         </div>
       </div>
     </section>
 
     <!-- About Section -->
-    <section class="about" id="about">
+    <section class="section about" id="about">
+      <div class="container about-grid">
+        <div class="about-content reveal">
+          <span class="section-eyebrow">Architecture</span>
+          <h2>Simple by Design, Ready for Production</h2>
+          <p>
+            Every line of code lives cleanly inside a single portable file—making it effortless to host on
+            AWS S3, CloudFront, GitHub Pages, or any static web server without complex build pipelines.
+          </p>
+          <ul class="checklist">
+            <li>
+              <span class="check-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              Automatic Light &amp; Dark Theme Persistence
+            </li>
+            <li>
+              <span class="check-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              Zero Build Tools or Third-Party Frameworks
+            </li>
+            <li>
+              <span class="check-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              WCAG-Friendly Contrast &amp; Semantic HTML5
+            </li>
+          </ul>
+        </div>
+
+        <div class="about-panel reveal">
+          <div class="code-header" aria-hidden="true">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-amber"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <div class="spec-list">
+            <div class="spec-item">
+              <span class="spec-name">Bundle Footprint</span>
+              <span class="spec-value">Single HTML File</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-name">Styling System</span>
+              <span class="spec-value">CSS Variables + Grid</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-name">Interactivity</span>
+              <span class="spec-value">Vanilla ES6+</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-name">Deployment Target</span>
+              <span class="spec-value">AWS S3 / Static Host</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section" id="contact">
       <div class="container">
+        <div class="section-header reveal">
+          <span class="section-eyebrow">Connect</span>
+          <h2 class="section-title">Send a Message</h2>
+          <p class="section-subtitle">
+            Have a question or want to customize this template? Drop a quick note below.
+          </p>
+        </div>
 
-        <h2 class="section-title">About Us</h2>
-
-        <p>
-          This website is built with clean, semantic HTML5
-          and modern CSS styling. It does not require any
-          build tools, external libraries, or complex setups.
-          Just open it in any modern web browser!
-        </p>
-
+        <div class="contact-card reveal">
+          <form class="form-grid" id="contact-form" novalidate>
+            <div class="form-group">
+              <label for="name">Your Name</label>
+              <input type="text" id="name" name="name" placeholder="Jane Doe" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="jane@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Tell us about your project..." required></textarea>
+            </div>
+            <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+          </form>
+        </div>
       </div>
     </section>
 
@@ -381,10 +1001,129 @@
 
   <!-- Footer -->
   <footer>
-    <div class="container">
-      <p>&copy; 2026 MyBrand. All rights reserved.</p>
+    <div class="container footer-wrapper">
+      <p>&copy; <span id="year">2026</span> MyBrand. All rights reserved.</p>
+      <ul class="footer-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
     </div>
   </footer>
+
+  <!-- Back to Top -->
+  <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <script>
+    (function () {
+      const root = document.documentElement;
+      const themeToggle = document.getElementById("theme-toggle");
+      const header = document.getElementById("site-header");
+      const backToTop = document.getElementById("back-to-top");
+      const navLinks = document.querySelectorAll(".nav-link");
+      const sections = document.querySelectorAll("main section[id]");
+      const contactForm = document.getElementById("contact-form");
+      const formStatus = document.getElementById("form-status");
+      const yearEl = document.getElementById("year");
+
+      if (yearEl) {
+        yearEl.textContent = String(new Date().getFullYear());
+      }
+
+      // Theme Initialization & Toggle
+      const savedTheme = localStorage.getItem("theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
+      root.setAttribute("data-theme", initialTheme);
+
+      themeToggle.addEventListener("click", function () {
+        const nextTheme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", nextTheme);
+        localStorage.setItem("theme", nextTheme);
+      });
+
+      // Scroll Effects (Header Shadow, Back-to-Top, Active Nav)
+      function handleScroll() {
+        const scrollY = window.scrollY;
+        header.classList.toggle("scrolled", scrollY > 10);
+        backToTop.classList.toggle("visible", scrollY > 360);
+
+        let currentId = "home";
+        sections.forEach(function (section) {
+          const top = section.offsetTop - 120;
+          if (scrollY >= top) {
+            currentId = section.getAttribute("id");
+          }
+        });
+
+        navLinks.forEach(function (link) {
+          link.classList.toggle("active", link.getAttribute("href") === "#" + currentId);
+        });
+      }
+
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      handleScroll();
+
+      backToTop.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      // Smooth Scroll Reveal
+      const revealEls = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12 }
+        );
+        revealEls.forEach(function (el) {
+          observer.observe(el);
+        });
+      } else {
+        revealEls.forEach(function (el) {
+          el.classList.add("visible");
+        });
+      }
+
+      // Contact Form Client-Side Validation
+      contactForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const message = document.getElementById("message").value.trim();
+        const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+        formStatus.className = "form-status";
+
+        if (!name || !email || !message) {
+          formStatus.textContent = "Please fill in all fields before sending.";
+          formStatus.classList.add("error");
+          return;
+        }
+
+        if (!emailValid) {
+          formStatus.textContent = "Please enter a valid email address.";
+          formStatus.classList.add("error");
+          return;
+        }
+
+        formStatus.textContent = "Thanks, " + name + "! Your message has been received.";
+        formStatus.classList.add("success");
+        contactForm.reset();
+      });
+    })();
+  </script>
 
 </body>
 
